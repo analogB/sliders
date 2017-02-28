@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+      <head>
+            <title>research study</title>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+            <script src="jspsychBR/jspsych.js"></script>
+            <script src="jspsychBR/plugins/jspsych-singlestim-multislider.js"></script>
+            <link  href="jspsychBR/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+      </head>
+      <body> </body>
+      <script>
+          var block1 = {
+              type: 'singlestim-multislider',
+              is_html: false,
+              stimPreamble: 'Observe the displayed item below.',
+              sliderPreamble: 'Using the sliders below, please indicate the probability that the displayed item is:',
+              options: [['dirt','emerald','lapis lazuli']],
+              stimulus: 'img/lapislazuli.png',
+              labelMinWidth: 100,
+              sliderLen: 150,
+              timing_post_trial: 200,
+              randomize_order: false
+          };
+          var timeline = [];
+          timeline.push(block1);
+          jsPsych.init({
+              timeline: timeline,
+              on_finish: function() {
+                  jsPsych.data.displayData();
+            }
+          });
+      </script>
+</html>
