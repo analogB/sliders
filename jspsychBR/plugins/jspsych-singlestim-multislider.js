@@ -81,13 +81,13 @@ jsPsych.plugins['singlestim-multislider'] = (function() {
       $trial_form.append($('<form> oninput="total.value=parseInt()"'));
 
       // initialize slider parameters
-      var len = trial.options[i].length;
-      var arr = createArray(len);
+      var nSliders = trial.options[i].length;
+      var arr = createArray(nSliders);
       var sliderMin = 0.1;
-      var sliderMax = 100-sliderMin*(len-1);
-      var initial = Math.round(100/len);
+      var sliderMax = 100-sliderMin*(nSliders-1);
+      var initial = Math.round(100/nSliders);
       var sliderValues=[]
-      for (k=0; k<len; k++){
+      for (k=0; k<nSliders; k++){
         sliderValues.push(initial);
       };
 
@@ -101,7 +101,7 @@ jsPsych.plugins['singlestim-multislider'] = (function() {
       };
 
       // create sliders
-      for(var j=0; j<len; j++) {
+      for(var j=0; j<nSliders; j++) {
         var option_id_name = _join(plugin_id_name, "option", i, j)
         var option_id_selector = '#' + option_id_name;
         $(question_selector).append($('<div>', {
@@ -140,11 +140,11 @@ jsPsych.plugins['singlestim-multislider'] = (function() {
       		el.val = +el.slider.val();
       		var newrest = 100-el.val;
       		var oldrest = 0;
-      		for (var k=0; k<len; k++) {
+      		for (var k=0; k<nSliders; k++) {
       			if (arr[k] == el) continue;
       			oldrest = oldrest + arr[k].val; //sum other elements
       		}
-      		for (var k=0; k<len; k++) {
+      		for (var k=0; k<nSliders; k++) {
       			if (arr[k] == el) continue;
       			arr[k].val = newrest/oldrest * arr[k].val; //allocate rest over other elements
       		};
@@ -156,7 +156,7 @@ jsPsych.plugins['singlestim-multislider'] = (function() {
       var lastInput = []
       arr.forEach(function(el,j) {
         el.slider.on('input',function(){
-          for (var k=0; k<len; k++){
+          for (var k=0; k<nSliders; k++){
             if (arr[k] == el){
             lastInput = k};
           };
@@ -206,30 +206,13 @@ jsPsych.plugins['singlestim-multislider'] = (function() {
     });
 
     // save data up to 20 options
-    var trial_data = {
-        "rt": response_time,
-        "lastInput": lastInput,
-        "responseA": sliderValues[0],
-        "responseB": sliderValues[1],
-        "responseC": sliderValues[2],
-        "responseD": sliderValues[3],
-        "responseE": sliderValues[4],
-        "responseF": sliderValues[5],
-        "responseG": sliderValues[6],
-        "responseH": sliderValues[7],
-        "responseI": sliderValues[8],
-        "responseJ": sliderValues[9],
-        "responseA": sliderValues[10],
-        "responseB": sliderValues[11],
-        "responseC": sliderValues[12],
-        "responseD": sliderValues[13],
-        "responseE": sliderValues[14],
-        "responseF": sliderValues[15],
-        "responseG": sliderValues[16],
-        "responseH": sliderValues[17],
-        "responseI": sliderValues[18],
-        "responseJ": sliderValues[19]
-        };
+    var trial_data = {}
+    trial_data['rt'] = response_time
+    trial_data['lastInput'] = lastInput
+    for(var j=0; j<nSliders; j++) {
+      responseIndex = 'response'+j;
+      trial_data[responseIndex] = sliderValues[j]
+    };
 
       display_element.html('');
 
